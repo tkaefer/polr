@@ -119,6 +119,8 @@ done
 php artisan migrate --force
 php artisan geoip:update
 
+cp ./vendor/laravel/lumen-framework/config/mail.php ./config/mail.php
+
 
 TERM=dumb DB_HOST=${DB_HOST} DB_PORT=${DB_PORT} DB_USERNAME=${DB_USERNAME} DB_PASSWORD=${DB_PASSWORD} DB_DATABASE=${DB_DATABASE} INITIAL_USER_NAME=${INITIAL_USER_NAME} INITIAL_USER_PASSWORD=${INITIAL_USER_PASSWORD} INITIAL_USER_EMAIL=${INITIAL_USER_EMAIL} php -- <<'EOPHP'
 <?php
