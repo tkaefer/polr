@@ -1,0 +1,44 @@
+version: "3.3"
+services:
+  web:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - data:/var/www/html:ro
+    links:
+      - polr
+    ports:
+      - "80:80"
+    depends_on:
+      - polr
+  polr:
+    image: polr:test
+    restart: unless-stopped
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_DATABASE=polr
+      - DB_USERNAME=polr
+      - DB_PASSWORD=polr
+    links:
+      - mariadb:mariadb
+    volumes:
+      - data:/var/www/html
+    depends_on:
+      - mariadb
+  mariadb:
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=polr
+      - MYSQL_USER=polr
+      - MYSQL_PASSWORD=polr
+    volumes:
+      - mariadb:/var/lib/mysql
+
+volumes:
+  data:
+  mariadb:
