@@ -157,7 +157,7 @@ do {
 	}
 } while ($mysql->connect_error);
 
-$result = $mysql->query("SELECT count(*) FROM users WHERE role='admin'")
+$result = $mysql->query("SELECT count(*) FROM users WHERE role='admin'");
 $row = $result->fetch_row();
 $adminCount = $row[0];
 
@@ -169,7 +169,7 @@ if ($adminCount < 1){
 
   if (!$mysql->query($insertSql)) {
     fwrite($stderr, "User could not be created: {$mysql->error}\n");
-  }  
+  }
 }
 
 
