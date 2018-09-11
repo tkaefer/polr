@@ -157,14 +157,21 @@ do {
 	}
 } while ($mysql->connect_error);
 
-$insertSql = <<<EOS
-INSERT INTO users (username, password, email, ip, recovery_key, role, active, api_key, api_active)
-VALUES('{$initalUserName}', '{$hashedInitialUserPassword}', '{$initalUserEMail}', '127.0.0.1', '{$recoveryKey}', 'admin', '1', false, 0)
-EOS;
+$result = $mysql->query("SELECT count(*) FROM users WHERE role='admin'")
+$row = $result->fetch_row();
+$adminCount = $row[0];
 
-if ( !$mysql->query($insertSql) ) {
-  fwrite($stderr, "User could not be created: {$mysql->error}\n");
+if ($adminCount < 1){
+  $insertSql = <<<EOS
+  INSERT INTO users (username, password, email, ip, recovery_key, role, active, api_key, api_active)
+  VALUES('{$initalUserName}', '{$hashedInitialUserPassword}', '{$initalUserEMail}', '127.0.0.1', '{$recoveryKey}', 'admin', '1', false, 0)
+  EOS;
+
+  if (!$mysql->query($insertSql)) {
+    fwrite($stderr, "User could not be created: {$mysql->error}\n");
+  }  
 }
+
 
 $mysql->close();
 EOPHP
