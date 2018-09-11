@@ -13,7 +13,7 @@ services:
     depends_on:
       - polr
   polr:
-    image: polr:test
+    image: quay.io/tkaefer/polr
     restart: unless-stopped
     environment:
       - DB_CONNECTION=mysql
