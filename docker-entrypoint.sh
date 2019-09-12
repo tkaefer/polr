@@ -2,6 +2,7 @@
 
 if [ ! -d /var/www/html/polr ]; then
   echo >&2 "Polr not found in $PWD - copying now..."
+  cd /var/www/html
   tar cf - --one-file-system -C /usr/src/polr . | tar xf -
 fi
 
