@@ -9,7 +9,7 @@ RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
   && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
   && apk add --no-cache --virtual .build-deps libjpeg-turbo-dev libpng-dev libzip-dev \
   && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
-  && docker-php-ext-install gd mysqli opcache tokenizer json zip pdo_mysql  \
+  && docker-php-ext-install gd mysqli opcache tokenizer json zip pdo_mysql \
   &&	runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
 			| tr ',' '\n' \
@@ -28,7 +28,8 @@ RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
   && curl -SL https://github.com/cydrobolt/polr/archive/2.2.0.tar.gz  | tar xzC /usr/src \
   && mv polr-2.2.0 polr  \
   && chown -R www-data:www-data /usr/src/polr && cd polr \
-  && php /usr/local/bin/composer install --no-dev -o
+  && php /usr/local/bin/composer install --no-dev -o \
+  && docker-php-ext-install pdo_mysql
 
 
 VOLUME /var/www/html
