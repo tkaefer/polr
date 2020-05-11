@@ -6,7 +6,7 @@ if [ ! -d /var/www/html/polr ]; then
   tar cf - --one-file-system -C /usr/src/polr . | tar xf -
 fi
 
-ln -s /dev/stdout /var/www/html/storage/logs/lumen.log
+touch /var/www/html/storage/logs/lumen.log
 
 chown -R www-data:www-data /var/www/html
 
@@ -103,7 +103,9 @@ else
   CONFIG=$(echo "${CONFIG}" | sed "s/MAIL_FROM_ADDRESS=.*/MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}/g")
   CONFIG=$(echo "${CONFIG}" | sed "s/MAIL_FROM_NAME=.*/MAIL_FROM_NAME=${MAIL_FROM_NAME}/g")
 fi
+
 echo "${CONFIG}" > /var/www/html/.env
+echon "APP_LOG=errorlog" >> /var/www/html/.env
 
 cd /var/www/html
 
