@@ -105,7 +105,7 @@ else
 fi
 
 echo "${CONFIG}" > /var/www/html/.env
-echon "APP_LOG=errorlog" >> /var/www/html/.env
+echo "APP_LOG=errorlog" >> /var/www/html/.env
 
 cd /var/www/html
 
