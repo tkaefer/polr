@@ -6,6 +6,10 @@ if [ ! -d /var/www/html/polr ]; then
   tar cf - --one-file-system -C /usr/src/polr . | tar xf -
 fi
 
+ln -s /dev/stdout /var/www/html/storage/logs/lumen.log
+
+chown -R www-data:www-data /var/www/html
+
 INITIAL_USER_NAME=${INITIAL_USER_NAME:-demo}
 INITIAL_USER_PASSWORD=${INITIAL_USER_PASSWORD:-demo}
 INITIAL_USER_EMAIL=${INITIAL_USER_PASSWORD:-demo@test.local}

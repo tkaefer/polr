@@ -1,8 +1,8 @@
-FROM php:7.3-fpm-alpine
+FROM php:7.4-fpm-alpine
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
-ENV COMPOSER_VERSION 1.8.4
+ENV COMPOSER_VERSION 1.10.6
 
 # docker-entrypoint.sh dependencies
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
