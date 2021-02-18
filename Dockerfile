@@ -25,8 +25,8 @@ RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
   && composer --ansi --version --no-interaction \
   && rm -rf /tmp/* /tmp/.htaccess \
   && cd /usr/src \
-  && curl -SL https://github.com/cydrobolt/polr/archive/2.2.0.tar.gz  | tar xzC /usr/src \
-  && mv polr-2.2.0 polr  \
+  && curl -SL https://github.com/cydrobolt/polr/archive/2.3.0b.tar.gz  | tar xzC /usr/src \
+  && mv polr-2.3.0b polr  \
   && chown -R www-data:www-data /usr/src/polr && cd polr \
   && php /usr/local/bin/composer install --no-dev -o \
   && docker-php-ext-install pdo_mysql
