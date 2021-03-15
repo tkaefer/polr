@@ -8,7 +8,7 @@ ENV COMPOSER_VERSION 1.10.6
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
   && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
   && apk add --no-cache --virtual .build-deps libjpeg-turbo-dev libpng-dev libzip-dev \
-  && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+  && docker-php-ext-configure gd --with-jpeg=/usr \
   && docker-php-ext-install gd mysqli opcache tokenizer json zip pdo_mysql \
   &&	runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
