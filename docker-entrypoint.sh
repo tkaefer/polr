@@ -12,7 +12,7 @@ chown -R www-data:www-data /var/www/html
 
 INITIAL_USER_NAME=${INITIAL_USER_NAME:-demo}
 INITIAL_USER_PASSWORD=${INITIAL_USER_PASSWORD:-demo}
-INITIAL_USER_EMAIL=${INITIAL_USER_PASSWORD:-demo@test.local}
+INITIAL_USER_EMAIL=${INITIAL_USER_EMAIL:-demo@test.local}
 
 APP_KEY="${APP_KEY:-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)}"
 APP_NAME="${APP_NAME:-Polr}"
