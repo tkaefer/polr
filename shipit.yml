@@ -1,0 +1,26 @@
+machine:
+  environment:
+    # Set up a folder-local kubeconfig so different deploys don't interact with each other.
+    KUBECONFIG: deploy/kubeconfig.yml
+    KUBECONTEXT: shipit-main
+
+ci:
+  require:
+    - "ci/circleci: polr_build_push"
+
+deploy:
+  pre:
+    - /app/bin/configure-shipit-kubectl # from shipit
+
+  override:
+    - |
+      export IMAGE=$REVISION && \
+      deploy/deploy.sh
+
+tasks:
+  restart-airflow:
+    action: "Restart polr"
+    description: "Restarts all the k8s pods for polr"
+    steps:
+      - /app/bin/configure-shipit-kubectl # from shipit
+      - krane restart polr $KUBECONTEXT --deployments=polr-web

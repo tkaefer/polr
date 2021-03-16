@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: polr-config
+  labels:
+    kubernetes-deploy: managed
+data:
+  APP_NAME: fellow.link
+  APP_PROTOCOL: https://
+  APP_ADDRESS: fellow.link
+  DB_CONNECTION: mysql
+  DB_HOST: apps.cenenhudtmur.ca-central-1.rds.amazonaws.com
+  DB_PORT: '3306'
+  DB_DATABASE: polr_production
+  DB_USERNAME: polr
+  MAIL_ENABLED: 'true'
+  MAIL_DRIVER: smtp
+  MAIL_HOST: smtp.sendgrid.net
+  MAIL_PORT: '25'
+  MAIL_USERNAME: apikey
+  MAIL_FROM_ADDRESS: link-shortener@fellow.co
+  MAIL_FROM_NAME: Fellow Link Shortener
+  POLR_ALLOW_ACCT_CREATION: 'false'
+  POLR_ACCT_ACTIVATION: 'true'
+  SETTING_PSEUDORANDOM_ENDING: 'true'
+  SETTING_SHORTEN_PERMISSION: 'true'
+  SETTING_RESTRICT_EMAIL_DOMAIN: 'true'
+  SETTING_ALLOWED_EMAIL_DOMAINS: 'fellow.co'
+  SESSION_DRIVER: 'file'
+  CACHE_DRIVER: 'file'

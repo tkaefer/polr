@@ -1,0 +1,99 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: polr-ingress
+  annotations:
+    certmanager.k8s.io/cluster-issuer: letsencrypt-production  # remove when cert-manager is upgraded
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  labels:
+    app: nginx-ingress
+    kubernetes-deploy: managed
+spec:
+  rules:
+  - host: fellow.link
+    http:
+      paths:
+      - backend:
+          serviceName: polr-web
+          servicePort: 80
+        path: /
+  tls:
+  - hosts:
+    - fellow.link
+    secretName: fellow-link-corp-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: polr-web
+  labels:
+    kubernetes-deploy: managed
+spec:
+  selector:
+    app: polr
+    tier: web
+  ports:
+    - name: nginx
+      protocol: TCP
+      port: 80
+      targetPort: web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: polr-web
+  labels:
+    kubernetes-deploy: managed
+spec:
+  replicas: 1  # polr only supports file based sessions and cookies, so pods don't share state, forgive me
+  selector:
+    matchLabels:
+      app: polr
+      tier: web
+  template:
+    metadata:
+      labels:
+        app: polr
+        tier: web
+        kubernetes-deploy: managed
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: polr-php-fpm
+        image: <%= container_registry %>/polr:<%= current_sha %>
+        command: ['/usr/local/bin/docker-entrypoint.sh', '/usr/local/sbin/php-fpm']
+        ports:
+        - name: fastcgi
+          containerPort: 9000
+        env:
+          - name: 'DEPLOY_TAG'
+            value: '3'
+        envFrom:
+        - configMapRef:
+            name: polr-config
+        - secretRef:
+            name: polr-secrets
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: www-data
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - name: web
+          containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          readOnly: true
+          name: nginx-config
+          subPath: nginx.conf
+        - mountPath: /var/www/html
+          readOnly: true
+          name: www-data
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+      - name: www-data
+        emptyDir: {}

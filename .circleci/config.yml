@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  polr_build_push:
+    docker:
+    - image: fellowapp/docker-build-tools:latest-warehouse
+    working_directory: ~/repo
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - run:
+          name: Build Polr docker image
+          command: |
+            mkdir -p ~/.docker
+            $(aws ecr get-login --region us-west-2 --no-include-email)
+            set -ex
+
+            docker build --tag polr:$CIRCLE_SHA1 .
+            docker tag polr:$CIRCLE_SHA1 326253947186.dkr.ecr.us-west-2.amazonaws.com/polr:$CIRCLE_SHA1
+            docker push 326253947186.dkr.ecr.us-west-2.amazonaws.com/polr:$CIRCLE_SHA1
+
+  validate_kubernetes_templates:
+    docker:
+      - image: fellowapp/docker-build-tools:latest-deploy
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: pip install structlog
+      - run:
+          name: Run validator
+          command: REVISION=$CIRCLE_SHA1 python deploy/validate.py
+
+
+workflows:
+  version: 2
+  build_test_push:
+    jobs:
+      - polr_build_push:
+          context: "EC2 Container Registry Access"
+      - validate_kubernetes_templates
